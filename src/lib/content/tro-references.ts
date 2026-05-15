@@ -53,4 +53,28 @@ export const TRO_REFERENCES: Record<string, TroReference> = {
     section: "§17.4",
     summary: "When half the acid has reacted, [HA] = [A⁻], so pH = pKa exactly.",
   },
+  indicatorError: {
+    id: "indicatorError",
+    title: "Endpoint vs. Equivalence Point",
+    chapter: "Aqueous Ionic Equilibrium",
+    section: "§17.4",
+    summary:
+      "The indicator endpoint (pH = pKa_HIn) is what the eye sees; the equivalence point (n_acid = n_base) is what the stoichiometry says. The gap between them is the indicator error.",
+  },
+  standardization: {
+    id: "standardization",
+    title: "Standardizing a Solution",
+    chapter: "Stoichiometry / Titration",
+    section: "Tro Ch. 4 + §17.4",
+    summary:
+      "NaOH is hygroscopic and absorbs CO₂, so its labeled molarity drifts from the truth. The fix is to titrate it against a primary standard (KHP) whose mass you trust on the balance.",
+  },
+  co2Pickup: {
+    id: "co2Pickup",
+    title: "CO₂ Absorption Near the Endpoint",
+    chapter: "Aqueous Ionic Equilibrium",
+    section: "§17.4 (lab technique)",
+    summary:
+      "Once the solution is basic, OH⁻ + CO₂ → HCO₃⁻ slowly pulls pH back down — phenolphthalein fades. Real endpoints are taken as the first *persistent* pink (≥30 s).",
+  },
 } as const;

@@ -18,8 +18,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <ul className="flex gap-6 text-sm">
               <li>
+                <Link href="/lab" className="hover:underline">
+                  Lab
+                </Link>
+              </li>
+              <li>
                 <Link href="/game" className="hover:underline">
-                  Game
+                  Sandbox
                 </Link>
               </li>
               <li>

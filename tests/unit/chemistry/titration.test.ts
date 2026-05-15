@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { ACETIC_ACID, SODIUM_HYDROXIDE } from "@/lib/chemistry/constants";
+import { ACETIC_ACID, PHENOLPHTHALEIN, SODIUM_HYDROXIDE } from "@/lib/chemistry/constants";
 import {
   concentrationFromEndpoint,
   equivalenceVolume_mL,
+  indicatorEndpointVolume,
   pHAt,
   regionAt,
   titrationCurve,
@@ -78,5 +79,19 @@ describe("concentrationFromEndpoint", () => {
   it("inverts the titration cleanly when endpoint = Veq", () => {
     const c = concentrationFromEndpoint(25, 0.1, 25);
     expect(c).toBeCloseTo(0.1, 6);
+  });
+});
+
+describe("indicatorEndpointVolume (phenolphthalein on 0.1 M HOAc + 0.1 M NaOH)", () => {
+  it("sits just past the equivalence point (indicator error is small but real)", () => {
+    const V_endpoint = indicatorEndpointVolume(SETUP, PHENOLPHTHALEIN);
+    const Veq = equivalenceVolume_mL(SETUP);
+    expect(V_endpoint).toBeGreaterThan(Veq);
+    expect(V_endpoint - Veq).toBeLessThan(1.0);
+  });
+
+  it("solves pHAt(V_endpoint) ≈ pKa_HIn within tolerance", () => {
+    const V_endpoint = indicatorEndpointVolume(SETUP, PHENOLPHTHALEIN);
+    expect(pHAt(V_endpoint, SETUP)).toBeCloseTo(PHENOLPHTHALEIN.pKaHIn, 2);
   });
 });

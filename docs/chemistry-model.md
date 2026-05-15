@@ -91,12 +91,58 @@ M = (% / 100) · ρ · 1000 / MW_HOAc      where MW_HOAc = 60.052 g/mol
 The student's measured molarity (back-calculated from `Veq` and the dilution
 factor) is converted back to % to compare against the label.
 
-## What the simulation deliberately omits
+## Real-lab quirks the simulation *does* model
+
+These were added once the scope expanded from "interactive plot" to
+"lab-failure-aware teaching tool":
+
+### CO₂ pickup near the endpoint (`co2-drift.ts`)
+
+Above pH ≈ 7, atmospheric CO₂ dissolves and reacts:
+
+```
+OH⁻ + CO₂ → HCO₃⁻        ;        OH⁻ + HCO₃⁻ → CO₃²⁻ + H₂O
+```
+
+The net effect is a slow drift of pH back down with time-since-mixing.
+Modelled as a linear-in-time drift capped so display pH never falls
+below the threshold, reset whenever the student adds a drop or swirls.
+
+This is what makes phenolphthalein fade back from pink to colorless if
+the student stops near the endpoint and waits — the visible cue that
+the real endpoint is "first persistent pink", not "first pink".
+
+### Indicator endpoint vs. equivalence point (`indicatorEndpointVolume`)
+
+The endpoint is the volume at which the indicator visibly transitions
+(midpoint at pH = pKa_HIn). The equivalence point is the volume at which
+stoichiometric base equals stoichiometric acid. These are different
+volumes; the gap is the indicator error.
+
+Computed by bisection on `pHAt`. Reported in both the sandbox results
+panel and the guided-lab report so the student confronts the distinction.
+
+### NaOH standardization against KHP (`khp.ts`)
+
+The bottle is labeled 0.100 M; the simulation's hidden truth is ~0.0987 M.
+The student weighs out a primary-standard KHP sample (mass on the balance
+is exact) and titrates the NaOH against it to recover the true molarity.
+
+Real-world motivation: solid NaOH is hygroscopic; aqueous NaOH absorbs CO₂
+to form Na₂CO₃; both effects shift the molarity from the label.
+
+### Realistic vinegar percent
+
+USDA legal range is 4–7%. The simulation uses 5.4% (hidden) for a bottle
+labeled 5.0%, so the student must trust their measurement over the label.
+
+## What the simulation still deliberately omits
 
 - Activity coefficients (we treat activity ≈ concentration).
 - Temperature dependence of Ka and Kw (everything at 25 °C).
-- CO₂ pickup from air (ignored; NaOH is assumed standardized).
 - Indicator's own contribution to pH (negligible at typical doses).
+- Brownian noise on burette readings (could be added as a "realism" mode).
+- Color perception variability across users.
 
 These are reasonable for an introductory simulation; revisit if/when the
 project grows into a quantitative-analysis context.

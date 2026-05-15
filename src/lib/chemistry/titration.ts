@@ -1,4 +1,4 @@
-import type { TitrationPoint, TitrationRegion, TitrationSetup } from "@/types/chemistry";
+import type { Indicator, TitrationPoint, TitrationRegion, TitrationSetup } from "@/types/chemistry";
 import {
   pHBufferEquilibrium,
   pHEquivalenceWeakAcidStrongBase,
@@ -87,4 +87,27 @@ export function concentrationFromEndpoint(
   const molBase = titrantConcentration * endpointVolume_mL * ML_TO_L;
   const Va_L = analyteVolume_mL * ML_TO_L;
   return molBase / Va_L;
+}
+
+/**
+ * Volume of titrant at which the indicator is at its visible midpoint
+ * (50% basic form ⇒ pH = pKa_HIn). This is *not* the equivalence point;
+ * the gap between them is the "indicator error" that motivates picking an
+ * indicator whose pKa_HIn matches the equivalence pH.
+ *
+ * Solved by bisection because pHAt is piecewise-defined.
+ */
+export function indicatorEndpointVolume(setup: TitrationSetup, indicator: Indicator): number {
+  const targetPH = indicator.pKaHIn;
+  const Veq = equivalenceVolume_mL(setup);
+  let lo = 0;
+  let hi = Veq * 2;
+  if (pHAt(hi, setup) < targetPH) return hi;
+  if (pHAt(lo, setup) > targetPH) return lo;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (pHAt(mid, setup) < targetPH) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
 }
