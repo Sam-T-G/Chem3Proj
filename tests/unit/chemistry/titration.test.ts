@@ -65,6 +65,13 @@ describe("titrationCurve", () => {
       expect(curve[i]!.pH).toBeGreaterThanOrEqual(curve[i - 1]!.pH - 1e-6);
     }
   });
+
+  it("uses sensible defaults when no options are passed", () => {
+    const curve = titrationCurve(SETUP);
+    expect(curve.length).toBe(201);
+    expect(curve[0]!.volumeAdded_mL).toBe(0);
+    expect(curve.at(-1)!.volumeAdded_mL).toBeGreaterThan(equivalenceVolume_mL(SETUP));
+  });
 });
 
 describe("concentrationFromEndpoint", () => {

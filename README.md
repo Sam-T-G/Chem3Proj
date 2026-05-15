@@ -10,6 +10,15 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
+To run the Playwright e2e tests locally, install the browser once:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Unit tests, typecheck, lint, and build need only `npm install`.
+
 ## What you can do
 
 - **/** — Landing page, intro to the lab.

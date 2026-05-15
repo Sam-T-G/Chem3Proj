@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  hydroniumFromPH,
   pH,
   pHBuffer,
   pHEquivalenceWeakAcidStrongBase,
@@ -15,6 +16,11 @@ describe("pH primitives", () => {
   it("rejects nonpositive [H+]", () => {
     expect(() => pH(0)).toThrow();
     expect(() => pH(-1)).toThrow();
+  });
+
+  it("round-trips through hydroniumFromPH", () => {
+    expect(hydroniumFromPH(pH(1e-4))).toBeCloseTo(1e-4, 10);
+    expect(hydroniumFromPH(7)).toBeCloseTo(1e-7, 12);
   });
 });
 

@@ -28,4 +28,9 @@ describe("indicatorColor", () => {
       PHENOLPHTHALEIN.baseColor.toLowerCase(),
     );
   });
+
+  it("throws on malformed hex colors", () => {
+    const broken = { ...PHENOLPHTHALEIN, acidColor: "#fff" };
+    expect(() => indicatorColor(7, broken)).toThrow(/rrggbb/);
+  });
 });
