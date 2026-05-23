@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   NOMINAL_NAOH_MOLARITY,
-  VINEGAR_DILUTION_FACTOR,
   VINEGAR_SAMPLE_VOLUME_ML,
   useGameStore,
 } from "@/lib/game/state";
@@ -15,58 +14,33 @@ export function TitrateStep({ onComplete }: { onComplete: () => void }) {
   const endpointVolume_mL = useGameStore((s) => s.endpointVolume_mL);
 
   const [loaded, setLoaded] = useState(false);
-  const [useLabelInstead, setUseLabelInstead] = useState(false);
+  const workingMolarity = standardization?.measuredNaOHMolarity ?? NOMINAL_NAOH_MOLARITY;
 
   useEffect(() => {
-    const working = useLabelInstead
-      ? NOMINAL_NAOH_MOLARITY
-      : (standardization?.measuredNaOHMolarity ?? NOMINAL_NAOH_MOLARITY);
-    loadVinegarSetup(working);
+    loadVinegarSetup(workingMolarity);
     setLoaded(true);
-  }, [loadVinegarSetup, standardization, useLabelInstead]);
-
-  const workingMolarity = useLabelInstead
-    ? NOMINAL_NAOH_MOLARITY
-    : (standardization?.measuredNaOHMolarity ?? NOMINAL_NAOH_MOLARITY);
+  }, [loadVinegarSetup, workingMolarity]);
 
   return (
     <section className="space-y-4">
       <header>
         <h2 className="text-xl font-bold">Titrate the vinegar</h2>
-        <p className="mt-1 max-w-3xl text-sm text-slate-700 dark:text-slate-300">
-          You pipetted <strong>{VINEGAR_SAMPLE_VOLUME_ML} mL</strong> of vinegar diluted{" "}
-          <strong>{VINEGAR_DILUTION_FACTOR}×</strong> into the flask with two drops of
-          phenolphthalein. Working NaOH molarity:{" "}
-          <span className="font-mono">{workingMolarity.toFixed(4)} M</span>
-          {useLabelInstead && (
-            <span className="ml-1 text-amber-700 dark:text-amber-300">(from label)</span>
-          )}
-          .
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          {VINEGAR_SAMPLE_VOLUME_ML} mL of diluted vinegar with phenolphthalein. Stop at the
+          first <em>persistent</em> pink.
         </p>
       </header>
-
-      <label className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-        <input
-          type="checkbox"
-          checked={useLabelInstead}
-          onChange={(e) => setUseLabelInstead(e.target.checked)}
-        />
-        Use the bottle label (0.100 M) instead of your standardized value — what happens to
-        the result?
-      </label>
 
       {loaded && <TitrationStation />}
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
         <div className="text-sm">
           {endpointVolume_mL == null ? (
-            <span className="text-slate-500">
-              Add NaOH until persistent pink, then <em>Mark endpoint</em>.
-            </span>
+            <span className="text-slate-500">Mark the endpoint when pink persists.</span>
           ) : (
             <>
-              <span className="font-semibold">Endpoint: </span>
               <span className="font-mono">{endpointVolume_mL.toFixed(2)} mL</span>
+              <span className="ml-3 text-slate-500">at endpoint</span>
             </>
           )}
         </div>

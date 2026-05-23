@@ -26,11 +26,7 @@ export default function LabPage() {
 
   return (
     <section>
-      <h1 className="mb-1 text-2xl font-bold">Guided lab — vinegar titration</h1>
-      <p className="mb-6 max-w-3xl text-sm text-slate-600 dark:text-slate-400">
-        Predict the outcome, standardize your NaOH, titrate the vinegar with realistic CO₂
-        fade-back near the endpoint, and confront your predictions in the final report.
-      </p>
+      <h1 className="mb-6 text-2xl font-bold">Vinegar titration lab</h1>
 
       <LabStepper current={step} completed={completed} onSelect={setStep} />
 
